@@ -61,31 +61,7 @@ describe('CnbApiClient', () => {
     });
   });
   
-  describe('getFileContent', () => {
-    it('should fetch file content successfully', async () => {
-      const mockResponse = {
-        data: {
-          content: 'console.log("Hello, world!");',
-          encoding: 'utf-8'
-        }
-      };
-      
-      cnbApiClient.axiosInstance.get.mockResolvedValue(mockResponse);
-      
-      const result = await cnbApiClient.getFileContent('test-repo', 'src/index.js', 'main');
-      
-      expect(cnbApiClient.axiosInstance.get).toHaveBeenCalledWith('/repos/test-repo/contents/src/index.js', {
-        params: { ref: 'main' }
-      });
-      expect(result).toEqual(mockResponse.data);
-    });
-    
-    it('should handle errors when fetching file content', async () => {
-      cnbApiClient.axiosInstance.get.mockRejectedValue(new Error('File not found'));
-      
-      await expect(cnbApiClient.getFileContent('test-repo', 'src/index.js', 'main')).rejects.toThrow('Failed to fetch file content: File not found');
-    });
-  });
+
   
   describe('postPrComment', () => {
     it('should post a comment to a PR successfully', async () => {

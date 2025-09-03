@@ -29,23 +29,7 @@ class CnbApiClient {
     }
   }
 
-  /**
-   * Fetch file content from CNB platform
-   * @param {string} repoName - Repository name
-   * @param {string} filePath - File path
-   * @param {string} ref - Git reference (branch, tag, or commit SHA)
-   * @returns {Promise<Object>} File content
-   */
-  async getFileContent(repoName, filePath, ref) {
-    try {
-      const response = await this.axiosInstance.get(`/repos/${repoName}/contents/${filePath}`, {
-        params: { ref }
-      });
-      return response.data;
-    } catch (error) {
-      throw new Error(`Failed to fetch file content: ${error.message}`);
-    }
-  }
+
 
   /**
    * Post a comment to a PR discussion thread
