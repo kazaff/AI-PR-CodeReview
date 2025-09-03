@@ -69,8 +69,11 @@ main:
       stages:
         - name: Trigger Webhook
           script: |
-            # 这里可以添加触发webhook的脚本
-            # CNB平台会自动将PR事件信息发送到配置的webhook URL
+        # CNB平台会自动将PR事件信息发送到配置的webhook URL
+        # 以下是一个简单的示例脚本，用于触发webhook
+        echo "Triggering webhook for PR event"
+        # 实际上，CNB平台会自动处理webhook发送，无需手动编写发送逻辑
+        # 这里可以添加其他需要在PR事件触发时执行的自定义逻辑
 ```
 
 ### 5. 设置webhook密钥
