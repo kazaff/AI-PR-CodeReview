@@ -135,7 +135,7 @@ The assistant receives events from CNB platform via webhooks:
 
 1. **Get PR Details**
    ```
-   GET /repos/{repoName}/pulls/{prId}
+   GET /{repo}/-/pulls/{number}
    ```
    Fetches detailed information about a specific pull request including files, changes, and metadata.
 
@@ -147,7 +147,7 @@ The assistant receives events from CNB platform via webhooks:
 
 3. **Post PR Comment**
    ```
-   POST /repos/{repoName}/pulls/{prId}/comments
+   POST /{repo}/-/pulls/{number}/comments
    ```
    Posts a structured comment to a pull request with details about code issues found.
 

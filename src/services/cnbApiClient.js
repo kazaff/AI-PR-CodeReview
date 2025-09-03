@@ -22,7 +22,7 @@ class CnbApiClient {
    */
   async getPrDetails(repoName, prId) {
     try {
-      const response = await this.axiosInstance.get(`/repos/${repoName}/pulls/${prId}`);
+      const response = await this.axiosInstance.get(`/${repoName}/-/pulls/${prId}`);
       return response.data;
     } catch (error) {
       throw new Error(`Failed to fetch PR details: ${error.message}`);
@@ -59,7 +59,7 @@ class CnbApiClient {
       // Use the comment content directly as it's already formatted as markdown
       const commentContent = comment.content || this.formatCommentAsMarkdown(comment);
       
-      const response = await this.axiosInstance.post(`/repos/${repoName}/pulls/${prId}/comments`, {
+      const response = await this.axiosInstance.post(`/${repoName}/-/pulls/${prId}/comments`, {
         body: commentContent,
         path: comment.path,
         position: comment.position

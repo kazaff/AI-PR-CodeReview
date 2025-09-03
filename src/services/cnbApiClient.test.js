@@ -50,7 +50,7 @@ describe('CnbApiClient', () => {
       
       const result = await cnbApiClient.getPrDetails('test-repo', 123);
       
-      expect(cnbApiClient.axiosInstance.get).toHaveBeenCalledWith('/repos/test-repo/pulls/123');
+      expect(cnbApiClient.axiosInstance.get).toHaveBeenCalledWith('/test-repo/-/pulls/123');
       expect(result).toEqual(mockResponse.data);
     });
     
@@ -116,7 +116,7 @@ describe('CnbApiClient', () => {
       
       const result = await cnbApiClient.postPrComment('test-repo', 123, comment);
       
-      expect(cnbApiClient.axiosInstance.post).toHaveBeenCalledWith('/repos/test-repo/pulls/123/comments', {
+      expect(cnbApiClient.axiosInstance.post).toHaveBeenCalledWith('/test-repo/-/pulls/123/comments', {
         body: '## Code Review Comment\n\n### Issues Found\n\n1. **Performance**\n   - **Description**: Inefficient algorithm\n   - **Suggestion**: Use a more efficient approach\n   - **Severity**: High\n\n### Summary\n\nCode review completed. Found 1 issues.\n\n',
         path: 'src/index.js',
         position: 10

@@ -56,7 +56,7 @@ describe('codeReviewService', () => {
       };
 
       // Mock the CNB API client
-      const mockCnbApiClient = {
+      const mockCnbApiClientInstance = {
         getPrDetails: jest.fn().mockResolvedValue({
           changes: [
             {
@@ -69,15 +69,10 @@ describe('codeReviewService', () => {
       };
       
       // Mock the module constructor
-      CnbApiClient.mockImplementation(() => {
-        return mockCnbApiClient;
-      });
-      
-      // Create an instance of the mocked client
-      const mockCnbApiClientInstance = mockCnbApiClient;
+      CnbApiClient.mockImplementation(() => mockCnbApiClientInstance);
 
       // Mock the AI analyzer
-      const mockAiAnalyzer = {
+      const mockAiAnalyzerInstance = {
         analyzePerformance: jest.fn().mockResolvedValue({
           issues: [{ type: 'Performance Issue', description: 'Inefficient loop' }]
         }),
@@ -89,28 +84,12 @@ describe('codeReviewService', () => {
         })
       };
 
-      // Mock the comment formatter
-      const mockCommentFormatter = {
-        formatComment: jest.fn().mockReturnValue('## Formatted Comment'),
-        formatSummaryComment: jest.fn().mockReturnValue('## Summary Comment')
-      };
-
-      // Create a new instance of the service with mocked dependencies
-      const codeReviewService = require('./codeReviewService');
-      
-      // Replace the actual implementations with mocks
-      const mockAiAnalyzerInstance = mockAiAnalyzer;
-      
-      // Mock the CNB API client
-      jest.mock('./cnbApiClient');
-      CnbApiClient.mockImplementation(() => mockCnbApiClient);
-      
       // Mock the AI analyzer
-      jest.mock('./aiAnalyzer');
       AIAnalyzer.mockImplementation(() => mockAiAnalyzerInstance);
-      
-      CommentFormatter.formatComment = mockCommentFormatter.formatComment;
-      CommentFormatter.formatSummaryComment = mockCommentFormatter.formatSummaryComment;
+
+      // Mock the comment formatter
+      CommentFormatter.formatComment = jest.fn().mockReturnValue('## Formatted Comment');
+      CommentFormatter.formatSummaryComment = jest.fn().mockReturnValue('## Summary Comment');
 
       const prEvent = {
         pull_request: {
@@ -124,6 +103,10 @@ describe('codeReviewService', () => {
         }
       };
 
+      // Create a new instance of the service with mocked dependencies
+      jest.resetModules();
+      const codeReviewService = require('./codeReviewService');
+      
       // Mock the internal functions to avoid calling the actual implementations
       const analyzeCodeChangesSpy = jest.spyOn(codeReviewService, 'analyzeCodeChanges').mockResolvedValue(mockAnalysisResults);
       const postReviewCommentsSpy = jest.spyOn(codeReviewService, 'postReviewComments').mockResolvedValue();
@@ -131,7 +114,7 @@ describe('codeReviewService', () => {
       await codeReviewService.processPrEvent(prEvent);
 
       // Verify that the CNB API client methods were called
-      expect(mockCnbApiClient.getPrDetails).toHaveBeenCalledWith('test-repo', 123);
+      expect(mockCnbApiClientInstance.getPrDetails).toHaveBeenCalledWith('test-repo', 123);
       
       // Verify that the internal functions were called
       expect(analyzeCodeChangesSpy).toHaveBeenCalled();
