@@ -50,12 +50,7 @@ async function processPrEvent(prEvent) {
 function extractPrData(prEvent) {
   return {
     id: prEvent.pull_request?.id,
-    title: prEvent.pull_request?.title,
-    description: prEvent.pull_request?.description,
-    author: prEvent.pull_request?.author,
-    repository: prEvent.repository?.name,
-    changes: prEvent.pull_request?.changes || [],
-    diff: prEvent.pull_request?.diff
+    repository: prEvent.repository?.name
   };
 }
 

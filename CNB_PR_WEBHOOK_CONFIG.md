@@ -71,26 +71,16 @@ main:
           script: |
         # CNB平台会自动将PR事件信息发送到配置的webhook URL
         # 以下是一个curl命令示例，用于手动测试webhook
-        # 使用CNB平台提供的环境变量来构建请求体
+        # 使用CNB平台提供的环境变量来构建请求体，只需要传递PR的IID即可
         curl -X POST "${CNB_WEBHOOK_URL:-https://your-ai-code-review-service.com/webhook/pr}" \
           -H "Content-Type: application/json" \
-          -H "x-cnb-signature: sha256=$(echo -n '{"repository":{"name":"'"${CNB_PULL_REQUEST_SLUG:-example-repo}"'"},"pull_request":{"id":'"${CNB_PULL_REQUEST_IID:-123}"',"title":"'"${CNB_PULL_REQUEST_TITLE:-Example PR for testing}"'","description":"'"${CNB_PULL_REQUEST_DESCRIPTION:-This is a test PR to verify webhook functionality}"'","author":"'"${CNB_PULL_REQUEST_PROPOSER:-test-user}"'"}}' | openssl dgst -sha256 -hmac "${CNB_WEBHOOK_SECRET:-your-webhook-secret}" | sed 's/^(stdin)= //')"
+          -H "x-cnb-signature: sha256=$(echo -n '{"repository":{"name":"'"${CNB_PULL_REQUEST_SLUG:-example-repo}"'"},"pull_request":{"id":'"${CNB_PULL_REQUEST_IID:-123}"'}}' | openssl dgst -sha256 -hmac "${CNB_WEBHOOK_SECRET:-your-webhook-secret}" | sed 's/^(stdin)= //')"
           -d '{
             "repository": {
               "name": "'"${CNB_PULL_REQUEST_SLUG:-example-repo}"'"
             },
             "pull_request": {
-              "id": '"${CNB_PULL_REQUEST_IID:-123}"',
-              "title": "'"${CNB_PULL_REQUEST_TITLE:-Example PR for testing}"'",
-              "description": "'"${CNB_PULL_REQUEST_DESCRIPTION:-This is a test PR to verify webhook functionality}"'",
-              "author": "'"${CNB_PULL_REQUEST_PROPOSER:-test-user}"'",
-              "changes": [
-                {
-                  "filename": "src/example.js",
-                  "content": "console.log(\"Hello, World!\");",
-                  "patch": "@@ -1 +1 @@\n-console.log(\"Hello\");\n+console.log(\"Hello, World!\");"
-                }
-              ]
+              "id": '"${CNB_PULL_REQUEST_IID:-123}"'
             }
           }'
         # 实际上，CNB平台会自动处理webhook发送，无需手动编写发送逻辑
@@ -118,17 +108,7 @@ CNB平台发送的PR事件webhook具有以下结构：
     "name": "example-repo"
   },
   "pull_request": {
-    "id": 123,
-    "title": "Fix bug in login flow",
-    "description": "This PR fixes the authentication issue...",
-    "author": "user123",
-    "changes": [
-      {
-        "filename": "src/auth.js",
-        "content": "file content here...",
-        "patch": "@@ -1,5 +1,5 @@\n-const greeting = 'Hello';\n+const greeting = 'Hello, World!';\n console.log(greeting);"
-      }
-    ]
+    "id": 123
   }
 }
 ```

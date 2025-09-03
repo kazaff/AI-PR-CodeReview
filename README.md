@@ -159,13 +159,7 @@ The assistant expects CNB webhook events with the following structure:
     "name": "example-repo"
   },
   "pull_request": {
-    "id": 123,
-    "changes": [
-      {
-        "file": "src/index.js",
-        "patch": "@@ -1,5 +1,5 @@\n-const greeting = 'Hello';\n+const greeting = 'Hello, World!';\n console.log(greeting);"
-      }
-    ]
+    "id": 123
   }
 }
 ```
