@@ -67,6 +67,14 @@ describe('codeReviewService', () => {
         }),
         postPrComment: jest.fn().mockResolvedValue({})
       };
+      
+      // Mock the module constructor
+      CnbApiClient.mockImplementation(() => {
+        return mockCnbApiClient;
+      });
+      
+      // Create an instance of the mocked client
+      const mockCnbApiClientInstance = mockCnbApiClient;
 
       // Mock the AI analyzer
       const mockAiAnalyzer = {
@@ -91,8 +99,16 @@ describe('codeReviewService', () => {
       const codeReviewService = require('./codeReviewService');
       
       // Replace the actual implementations with mocks
+      const mockAiAnalyzerInstance = mockAiAnalyzer;
+      
+      // Mock the CNB API client
+      jest.mock('./cnbApiClient');
       CnbApiClient.mockImplementation(() => mockCnbApiClient);
-      AIAnalyzer.mockImplementation(() => mockAiAnalyzer);
+      
+      // Mock the AI analyzer
+      jest.mock('./aiAnalyzer');
+      AIAnalyzer.mockImplementation(() => mockAiAnalyzerInstance);
+      
       CommentFormatter.formatComment = mockCommentFormatter.formatComment;
       CommentFormatter.formatSummaryComment = mockCommentFormatter.formatSummaryComment;
 
@@ -109,8 +125,8 @@ describe('codeReviewService', () => {
       };
 
       // Mock the internal functions to avoid calling the actual implementations
-      codeReviewService.analyzeCodeChanges = jest.fn().mockResolvedValue(mockAnalysisResults);
-      codeReviewService.postReviewComments = jest.fn().mockResolvedValue();
+      const analyzeCodeChangesSpy = jest.spyOn(codeReviewService, 'analyzeCodeChanges').mockResolvedValue(mockAnalysisResults);
+      const postReviewCommentsSpy = jest.spyOn(codeReviewService, 'postReviewComments').mockResolvedValue();
 
       await codeReviewService.processPrEvent(prEvent);
 
@@ -118,8 +134,8 @@ describe('codeReviewService', () => {
       expect(mockCnbApiClient.getPrDetails).toHaveBeenCalledWith('test-repo', 123);
       
       // Verify that the internal functions were called
-      expect(codeReviewService.analyzeCodeChanges).toHaveBeenCalled();
-      expect(codeReviewService.postReviewComments).toHaveBeenCalled();
+      expect(analyzeCodeChangesSpy).toHaveBeenCalled();
+      expect(postReviewCommentsSpy).toHaveBeenCalled();
     });
   });
 });

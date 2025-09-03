@@ -23,8 +23,15 @@ async function processPrEvent(prEvent) {
     // Fetch full PR details from CNB API
     const fullPrData = await cnbApiClient.getPrDetails(prData.repository, prData.id);
     
+    // Merge PR data from webhook with full PR data from API
+    const mergedPrData = {
+      ...prData,
+      ...fullPrData,
+      changes: (fullPrData && fullPrData.changes) || (prData && prData.changes) || []
+    };
+    
     // Perform code review analysis
-    const analysisResults = await analyzeCodeChanges(fullPrData);
+    const analysisResults = await analyzeCodeChanges(mergedPrData);
     
     // Post comments to PR
     await postReviewComments(prData.repository, prData.id, analysisResults);
@@ -63,7 +70,7 @@ async function analyzeCodeChanges(prData) {
   };
   
   // Check if prData has changes property
-  if (!prData.changes) {
+  if (!prData || !prData.changes) {
     console.warn('No changes found in PR data');
     return results;
   }
