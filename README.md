@@ -114,6 +114,10 @@ npm test
 
 ## CNB API Integration
 
+For detailed information about the CNB platform API, please refer to the official documentation:
+- [CNB Platform API Documentation](https://api.cnb.cool)
+- [CNB Developer Portal](https://docs.cnb.cool/en/openapi.html)
+
 The AI Code Review Assistant integrates with the CNB platform through its REST API. Here's how the integration works:
 
 ### Authentication
