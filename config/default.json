@@ -1,0 +1,13 @@
+{
+  "server": {
+    "port": 3000
+  },
+  "cnbPlatform": {
+    "baseUrl": "https://api.cnb-platform.com",
+    "webhookSecret": "your-webhook-secret-here"
+  },
+  "aiProvider": {
+    "name": "anthropic",
+    "model": "claude-3-5-sonnet-20240620"
+  }
+}
