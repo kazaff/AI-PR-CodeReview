@@ -112,6 +112,65 @@ npm test
 4. The analysis results are formatted as structured comments.
 5. Comments are posted back to the PR on the CNB platform.
 
+## CNB API Integration
+
+The AI Code Review Assistant integrates with the CNB platform through its REST API. Here's how the integration works:
+
+### Authentication
+The assistant uses Bearer Token authentication with your CNB API key:
+- Configure the `CNB_API_KEY` environment variable with your CNB platform API key
+- The API key is automatically included in the Authorization header of all requests
+
+### Webhook Configuration
+The assistant receives events from CNB platform via webhooks:
+- Webhook URL: `http://your-server-address:3000/webhook/pr`
+- The webhook requires a secret for verification (configured via `CNB_WEBHOOK_SECRET`)
+- Webhook events are signed using HMAC SHA256 for security
+
+### API Endpoints Used
+
+1. **Get PR Details**
+   ```
+   GET /repos/{repoName}/pulls/{prId}
+   ```
+   Fetches detailed information about a specific pull request including files, changes, and metadata.
+
+2. **Get File Content**
+   ```
+   GET /repos/{repoName}/contents/{filePath}?ref={ref}
+   ```
+   Retrieves the content of a specific file at a given reference (branch, tag, or commit).
+
+3. **Post PR Comment**
+   ```
+   POST /repos/{repoName}/pulls/{prId}/comments
+   ```
+   Posts a structured comment to a pull request with details about code issues found.
+
+### Webhook Event Structure
+The assistant expects CNB webhook events with the following structure:
+```json
+{
+  "repository": {
+    "name": "example-repo"
+  },
+  "pull_request": {
+    "id": 123,
+    "changes": [
+      {
+        "file": "src/index.js",
+        "patch": "@@ -1,5 +1,5 @@\n-const greeting = 'Hello';\n+const greeting = 'Hello, World!';\n console.log(greeting);"
+      }
+    ]
+  }
+}
+```
+
+### Security
+- Webhook signatures are verified using HMAC SHA256
+- All API requests use HTTPS
+- API keys are stored as environment variables, not in code
+
 ## Contributing
 
 1. Fork the repository
