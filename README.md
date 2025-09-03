@@ -1,6 +1,6 @@
 # AI Code Review Assistant
 
-AI Code Review Assistant is an automated code review tool that integrates with the CNB platform. It uses AI (Anthropic's Claude) to analyze pull requests for performance, security, and SOLID principle violations, then automatically posts structured feedback as comments on the PR.
+AI Code Review Assistant is an automated code review tool that integrates with the CNB platform. It uses AI (Alibaba Cloud's Qwen3-Coder) to analyze pull requests for performance, security, and SOLID principle violations, then automatically posts structured feedback as comments on the PR.
 
 ## Features
 
@@ -14,7 +14,7 @@ AI Code Review Assistant is an automated code review tool that integrates with t
 
 - **Node.js** - JavaScript runtime environment
 - **Express.js** - Web framework for Node.js
-- **Anthropic Claude API** - AI model for code analysis
+- **Alibaba Cloud Qwen3-Coder API** - AI model for code analysis
 - **Axios** - HTTP client for API requests
 - **Jest** - Testing framework
 
@@ -22,7 +22,7 @@ AI Code Review Assistant is an automated code review tool that integrates with t
 
 - Node.js (v14 or higher)
 - npm (v6 or higher)
-- Anthropic API key
+- Alibaba Cloud DashScope API key
 - CNB platform API key
 - CNB platform webhook secret
 
@@ -38,9 +38,9 @@ AI Code Review Assistant is an automated code review tool that integrates with t
    # CNB Platform Configuration
    CNB_API_KEY=your_actual_cnb_api_key
    CNB_WEBHOOK_SECRET=your_actual_webhook_secret
-   
-   # AI Provider Configuration
-   ANTHROPIC_API_KEY=your_actual_anthropic_api_key
+
+   # Alibaba Cloud DashScope Configuration
+   DASHSCOPE_API_KEY=your_actual_dashscope_api_key
    
    # Server Configuration
    PORT=3000

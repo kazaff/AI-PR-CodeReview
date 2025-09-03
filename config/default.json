@@ -7,7 +7,7 @@
     "webhookSecret": "your-webhook-secret-here"
   },
   "aiProvider": {
-    "name": "anthropic",
-    "model": "claude-3-5-sonnet-20240620"
+    "name": "dashscope",
+    "model": "qwen3-coder-plus"
   }
 }

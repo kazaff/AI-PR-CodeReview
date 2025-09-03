@@ -1,16 +1,11 @@
 /**
  * AI Analyzer service for code review using LLM
  */
-const Anthropic = require('@anthropic-ai/sdk');
+const axios = require('axios');
 const config = require('config');
 
 class AIAnalyzer {
   constructor() {
-    // Initialize Anthropic client with API key from config
-    this.anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY
-    });
-    
     // Get model name from config
     this.model = config.get('aiProvider.model');
   }
@@ -185,20 +180,33 @@ Example:
    */
   async callLLM(prompt) {
     try {
-      const response = await this.anthropic.messages.create({
-        model: this.model,
-        max_tokens: 1000,
-        messages: [
-          {
-            role: 'user',
-            content: prompt
+      const response = await axios.post(
+        'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+        {
+          model: this.model,
+          input: {
+            messages: [
+              {
+                role: 'user',
+                content: prompt
+              }
+            ]
+          },
+          parameters: {
+            max_tokens: 1000
           }
-        ]
-      });
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.DASHSCOPE_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
       
-      return response.content[0].text;
+      return response.data.output.choices[0].message.content;
     } catch (error) {
-      console.error('Error calling Anthropic API:', error);
+      console.error('Error calling DashScope API:', error);
       throw error;
     }
   }
