@@ -71,18 +71,19 @@ main:
           script: |
         # CNB平台会自动将PR事件信息发送到配置的webhook URL
         # 以下是一个curl命令示例，用于手动测试webhook
-        curl -X POST "https://your-ai-code-review-service.com/webhook/pr" \
+        # 使用CNB平台提供的环境变量来构建请求体
+        curl -X POST "${CNB_WEBHOOK_URL:-https://your-ai-code-review-service.com/webhook/pr}" \
           -H "Content-Type: application/json" \
-          -H "x-cnb-signature: sha256=generated_signature" \
+          -H "x-cnb-signature: sha256=$(echo -n '{"repository":{"name":"'"${CNB_PULL_REQUEST_SLUG:-example-repo}"'"},"pull_request":{"id":'"${CNB_PULL_REQUEST_IID:-123}"',"title":"'"${CNB_PULL_REQUEST_TITLE:-Example PR for testing}"'","description":"'"${CNB_PULL_REQUEST_DESCRIPTION:-This is a test PR to verify webhook functionality}"'","author":"'"${CNB_PULL_REQUEST_PROPOSER:-test-user}"'"}}' | openssl dgst -sha256 -hmac "${CNB_WEBHOOK_SECRET:-your-webhook-secret}" | sed 's/^(stdin)= //')"
           -d '{
             "repository": {
-              "name": "example-repo"
+              "name": "'"${CNB_PULL_REQUEST_SLUG:-example-repo}"'"
             },
             "pull_request": {
-              "id": 123,
-              "title": "Example PR for testing",
-              "description": "This is a test PR to verify webhook functionality",
-              "author": "test-user",
+              "id": '"${CNB_PULL_REQUEST_IID:-123}"',
+              "title": "'"${CNB_PULL_REQUEST_TITLE:-Example PR for testing}"'",
+              "description": "'"${CNB_PULL_REQUEST_DESCRIPTION:-This is a test PR to verify webhook functionality}"'",
+              "author": "'"${CNB_PULL_REQUEST_PROPOSER:-test-user}"'",
               "changes": [
                 {
                   "filename": "src/example.js",
